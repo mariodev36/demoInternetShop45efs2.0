@@ -5,6 +5,8 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.Date;
 @Service
 public class JwtTokenProvider {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
     @Value("${jwt.secret}")
     private String jwtSecret;
 
@@ -23,6 +26,8 @@ public class JwtTokenProvider {
     public String createToken(String username) {
 
         Date now = new Date();
+
+        log.warn("Время жизни токена установленно: {}", jwtLifeTime);
         Date expiryDate = new Date(now.getTime() + jwtLifeTime);
 
         Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
